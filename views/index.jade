@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  script(type="text/javascript", src="https://unpkg.com/axios/dist/axios.min.js")
+  script(type="text/javascript", src="/javascripts/libs/socket.io/socket.io.js")
+  script(type="text/javascript", src="/javascripts/index.js")
+  h1= title
+  p Welcome to #{title}
+  div
+    from()
+      input(name="testFile", type="file", id="fileInput")
+    button(onclick="handleClick();") submit
+  div
+    textarea(id="progress-pannel", readonly="true", cols="60", rows="30")

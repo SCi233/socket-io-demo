@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  script(type="text/javascript", src="/javascripts/libs/socket.io/socket.io.js")
+  script(type="text/javascript", src="/javascripts/random-code.js")
+  h1= title
+  p Welcome to #{title}
+  button(onclick="handleStartBtnClick();") start
+  button(onclick="handleStopBtnClick();") stop
+  div
+    textarea(id="progress-pannel", readonly="true", cols="60", rows="30")
