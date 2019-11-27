@@ -8,7 +8,7 @@ block content
   p Welcome to #{title}
   div
     from()
-      input(name="testFile", type="file", id="fileInput")
+      input(name="testFile", type="file", id="fileInput", accept=".txt")
     button(onclick="handleClick();") submit
   div
     textarea(id="progress-pannel", readonly="true", cols="60", rows="30")
