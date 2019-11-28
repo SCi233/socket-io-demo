@@ -7,6 +7,24 @@ const appendPannelText = (text) => {
   progressPannel.scrollTop = scrollHeight;
 };
 
+const appendPannelTextThrottle = (() => {
+  let arr = [];
+  let timer = null;
+  return (text) => {
+    arr.push(text);
+
+    if (timer) {
+      return;
+    }
+
+    timer = setTimeout(() => {
+      arr.forEach(el => appendPannelText(el));
+      arr = [];
+      timer = null;
+    }, 500);
+  }
+})();
+
 /**
  * upload file
  * @returns {Promise<{fileName: string}>} - filename
@@ -60,7 +78,7 @@ function handleClick () {
       const socket = io();
       socket.on('message', (msg) => {
         // console.log('message: ', msg);
-        appendPannelText(`parsing result: ${msg}`);
+        appendPannelTextThrottle(`parsing result: ${msg}`);
       });
       socket.on('connect', () => {
         appendPannelText('connect to server, start parsing task.');

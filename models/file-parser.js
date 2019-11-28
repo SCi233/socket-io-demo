@@ -1,5 +1,4 @@
 const fs = require('fs');
-const readline = require('readline');
 
 class FileParser {
   /**
@@ -10,33 +9,59 @@ class FileParser {
   constructor (filePath, eventEmitter) {
     this.filePath = filePath;
     this.eventEmitter = eventEmitter;
+
+    this.stopFlag = false;
+  }
+
+  fakeParse () {
+    return new Promise((resolve) => {
+      setTimeout(resolve, 1);
+    });
   }
 
   /**
    * start parse file
    */
   parse () {
-    const readStream = fs.createReadStream(this.filePath);
-    const readlineInterface = readline.createInterface({
-      input: readStream
-    });
+    fs.readFile(this.filePath, { encoding: 'utf8' }, async (err, text) => {
+      if (err) {
+        console.error('read file fail. err: ', err);
+        this.handleError(err);
+        return;
+      }
 
-    readlineInterface.on('close', () => {
-      console.log('readline complete.');
-      this.handleComplete();
 
-      fs.unlinkSync(this.filePath);
-    });
-    readlineInterface.on('line', (line) => {
+      // TODO: use os.EOL
       try {
-        // TODO: you can write parsing logic here
+        const lines = text.split('\n');
+        console.log(lines.length);
+        for (let i = 0; i < lines.length; ++i) {
+          if (this.stopFlag) {
+            return;
+          }
 
-        this.handleResult(line);
+          // TODO: write parse logic here
+
+          // fake parse
+          await this.fakeParse();
+
+          if (i % 1000 === 0) {
+            this.handleResult(`${i}/${lines.length}`);
+          }
+        }
       } catch (err) {
-        console.error('parse fail. err: ', err);
+        console.error('parse file fail. err: ', err);
         this.handleError(err);
       }
+
+      console.log('parse file complete.');
+      this.handleComplete();
+      fs.unlinkSync(this.filePath);
     });
+  }
+
+  stopParse () {
+    this.stopFlag = true;
   }
 
   /**

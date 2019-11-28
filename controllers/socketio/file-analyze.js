@@ -26,8 +26,17 @@ const handleFileAnalyze = (socket, fileName) => {
     socket.disconnect(true);
   });
 
-  const fileParser = new FileParser(filePath, e);
+  let fileParser = new FileParser(filePath, e);
   fileParser.parse();
+
+  socket.on('disconnect', () => {
+    e.removeAllListeners('message');
+    e.removeAllListeners('complete');
+    e.removeAllListeners('error');
+
+    fileParser.stopParse();
+    fileParser = null;
+  })
 };
 
 module.exports = handleFileAnalyze;
