@@ -37,7 +37,7 @@ const uploadFile = () => {
   const param = new FormData();
   param.append('name', 'testFile');
   param.append('file', file);
-  console.log(param.get('file'));
+  // console.log(param.get('file'));
 
   if (!axios) {
     console.error('axios is required.');
